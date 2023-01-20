@@ -1298,6 +1298,7 @@ TfConst_cast(const TfRefPtr<const typename T::DataType>& ptr)
 
 // Specialization: prevent construction of a TfRefPtr<TfRefBase>.
 
+/*
 template <>
 class TfRefPtr<TfRefBase> {
 private:
@@ -1311,6 +1312,7 @@ private:
     TfRefPtr<const TfRefBase>() {
     }
 };
+*/
 
 template <class T>
 struct TfTypeFunctions<TfRefPtr<T> > {

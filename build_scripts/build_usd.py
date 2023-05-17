@@ -939,13 +939,19 @@ elif MacOS():
 else:
     TBB_URL = "https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2020.3.zip"
 
+TBB_2021_URL = "https://github.com/oneapi-src/oneTBB/archive/refs/tags/v2021.9.0.zip"
+
 def InstallTBB(context, force, buildArgs):
-    if Windows():
-        InstallTBB_Windows(context, force, buildArgs)
-    elif MacOS():
-        InstallTBB_MacOS(context, force, buildArgs)
+    if context.tbbVersion == "2021":
+        with CurrentWorkingDirectory(DownloadURL(TBB_2021_URL, context, force)):
+            RunCMake(context, force, buildArgs)
     else:
-        InstallTBB_Linux(context, force, buildArgs)
+        if Windows():
+            InstallTBB_Windows(context, force, buildArgs)
+        elif MacOS():
+            InstallTBB_MacOS(context, force, buildArgs)
+        else:
+            InstallTBB_Linux(context, force, buildArgs)
 
 def InstallTBB_Windows(context, force, buildArgs):
     with CurrentWorkingDirectory(DownloadURL(TBB_URL, context, force, 
@@ -1196,17 +1202,20 @@ BLOSC = Dependency("Blosc", InstallBLOSC, "include/blosc.h")
 # OpenVDB
 
 OPENVDB_URL = "https://github.com/AcademySoftwareFoundation/openvdb/archive/refs/tags/v9.1.0.zip"
-
-# OpenVDB v9.1.0 requires TBB 2019.0 or above, but this script installs
-# TBB 2018 on macOS Intel systems for reasons documented above. So we
-# keep OpenVDB at the version specified for the VFX Reference Platform
-# CY2021, which is the last version that supported 2018.
-OPENVDB_INTEL_URL = "https://github.com/AcademySoftwareFoundation/openvdb/archive/refs/tags/v8.2.0.zip"
+OPENVDB_8_URL = "https://github.com/AcademySoftwareFoundation/openvdb/archive/refs/tags/v8.2.0.zip"
+OPENVDB_10_URL = "https://github.com/AcademySoftwareFoundation/openvdb/archive/refs/tags/v10.0.1.zip"
 
 def InstallOpenVDB(context, force, buildArgs):
     openvdb_url = OPENVDB_URL
-    if MacOS() and not apple_utils.IsTargetArm(context):
-        openvdb_url = OPENVDB_INTEL_URL
+    # OpenVDB 10 is the first release to support oneTBB.
+    if context.tbbVersion == "2021":
+        openvdb_url = OPENVDB_10_URL
+    # OpenVDB v9.1.0 requires TBB 2019.0 or above, but this script installs
+    # TBB 2018 on macOS Intel systems for reasons documented above. So we
+    # keep OpenVDB at the version specified for the VFX Reference Platform
+    # CY2021, which is the last version that supported 2018.
+    elif MacOS() and not apple_utils.IsTargetArm(context):
+            openvdb_url = OPENVDB_8_URL
 
     with CurrentWorkingDirectory(DownloadURL(openvdb_url, context, force)):
         extraArgs = [
@@ -1930,6 +1939,13 @@ subgroup.add_argument("--no-openvdb", dest="enable_openvdb",
                       action="store_false",
                       help="Disable OpenVDB support in imaging (default)")
 subgroup = group.add_mutually_exclusive_group()
+subgroup.add_argument("--onetbb", dest="enable_onetbb", action="store_true", 
+                      default=False, 
+                      help="Use new oneAPI TBB version")
+subgroup.add_argument("--no-onetbb", dest="enable_onetbb", 
+                      action="store_false",
+                      help="Use old TBB version (default)")
+subgroup = group.add_mutually_exclusive_group()
 subgroup.add_argument("--usdview", dest="build_usdview",
                       action="store_true", default=True,
                       help="Build usdview (default)")
@@ -2101,6 +2117,9 @@ class InstallContext:
         self.buildExamples = args.build_examples
         self.buildTutorials = args.build_tutorials
         self.buildTools = args.build_tools
+
+        # - TBB
+        self.tbbVersion = "2021" if args.enable_onetbb else "2019"
 
         # - Imaging
         self.buildImaging = (args.build_imaging == IMAGING or
@@ -2366,6 +2385,7 @@ summaryMsg += """\
     Python support              {buildPython}
       Python Debug:             {debugPython}
       Python docs:              {buildPythonDocs}
+    TBB version:                {tbbVersion}
     Documentation               {buildDocs}
     Tests                       {buildTests}
     Examples                    {buildExamples}
@@ -2427,6 +2447,7 @@ summaryMsg = summaryMsg.format(
     buildPython=("On" if context.buildPython else "Off"),
     debugPython=("On" if context.debugPython else "Off"),
     buildPythonDocs=("On" if context.buildPythonDocs else "Off"),
+    tbbVersion=context.tbbVersion,
     buildDocs=("On" if context.buildDocs else "Off"),
     buildTests=("On" if context.buildTests else "Off"),
     buildExamples=("On" if context.buildExamples else "Off"),

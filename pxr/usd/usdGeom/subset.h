@@ -57,9 +57,9 @@ class SdfAssetPath;
 /// \class UsdGeomSubset
 ///
 /// Encodes a subset of a piece of geometry (i.e. a UsdGeomImageable) 
-/// as a set of indices. Currently only supports encoding of face-subsets, but 
-/// could be extended in the future to support subsets representing edges, 
-/// segments, points etc.
+/// as a set of indices. Currently only supports encoding of face-subsets and
+/// point-subsets, but could be extended in the future to support subsets 
+/// representing edges, segments, tetrahedrons, etc.
 /// 
 /// To apply to a geometric prim, a GeomSubset prim must be the prim's direct 
 /// child in namespace, and possess a concrete defining specifier (i.e. def). 
@@ -180,8 +180,20 @@ public:
     // --------------------------------------------------------------------- //
     // ELEMENTTYPE 
     // --------------------------------------------------------------------- //
-    /// The type of element that the indices target. Currently only 
-    /// allows "face" and defaults to it.
+    /// The type of element that the indices target. "elementType" can
+    /// have one of the following values:
+    /// <ul><li><b>face</b>: for a UsdGeomMesh, each element of the indices 
+    /// attribute would refer to an element of the Mesh's faceCounts 
+    /// attribute</li>
+    /// <li><b>point</b>: for any UsdGeomPointBased, each 
+    /// element of the indices attribute would refer to an element of the 
+    /// Mesh's points attribute</li>
+    /// <li><b>edge</b>: for any UsdGeomMesh, each pair of elements
+    /// in the indices attribute would refer to a pair of points of the 
+    /// Mesh's points attribute that are connected as an implicit edge on the 
+    /// Mesh. These edges are derived from the Mesh's faceVertexIndices 
+    /// attribute.
+    /// </li></ul>
     ///
     /// | ||
     /// | -- | -- |
@@ -189,7 +201,7 @@ public:
     /// | C++ Type | TfToken |
     /// | \ref Usd_Datatypes "Usd Type" | SdfValueTypeNames->Token |
     /// | \ref SdfVariability "Variability" | SdfVariabilityUniform |
-    /// | \ref UsdGeomTokens "Allowed Values" | face |
+    /// | \ref UsdGeomTokens "Allowed Values" | face, point, edge |
     USDGEOM_API
     UsdAttribute GetElementTypeAttr() const;
 
@@ -206,7 +218,9 @@ public:
     // INDICES 
     // --------------------------------------------------------------------- //
     /// The set of indices included in this subset. The indices need not 
-    /// be sorted, but the same index should not appear more than once.
+    /// be sorted, but the same index should not appear more than once. Indices 
+    /// are invalid if outside the range [0, elementCount) for the given time on 
+    /// the parent geometric prim.
     ///
     /// | ||
     /// | -- | -- |
@@ -242,7 +256,8 @@ public:
     /// the whole geometry appears exactly once in only one of the subsets
     /// belonging to the family.</li>
     /// <li><b>UsdGeomTokens->nonOverlapping</b>: an element that appears in one 
-    /// subset may not appear in any other subset belonging to the family.</li>
+    /// subset may not appear in any other subset belonging to the family, and 
+    /// appears only once in the subset in which it appears.</li>
     /// <li><b>UsdGeomTokens->unrestricted</b>: implies that there are no
     /// restrictions w.r.t. the membership of elements in the subsets. They 
     /// could be overlapping and the union of all subsets in the family may 
@@ -376,6 +391,19 @@ public:
         const TfToken &familyName);
 
     /// Utility for getting the list of indices that are not assigned to any of 
+    /// the GeomSubsets in the \p familyName family on the given \p geom at the 
+    /// timeCode, \p time, given the element count (total number of indices in 
+    /// the array being subdivided), \p elementCount.
+    USDGEOM_API
+    static VtIntArray GetUnassignedIndices(
+        const UsdGeomImageable &geom, 
+        const TfToken &elementType,
+        const TfToken &familyName,
+        const UsdTimeCode &time=UsdTimeCode::EarliestTime());
+
+    /// \deprecated Please use GetUnassignedIndices(geom, elementType,
+    /// familyName, time) instead.
+    /// Utility for getting the list of indices that are not assigned to any of 
     /// the GeomSubsets in \p subsets at the timeCode, \p time, given the 
     /// element count (total number of indices in the array being subdivided), 
     /// \p elementCount.
@@ -385,6 +413,7 @@ public:
         const size_t elementCount,
         const UsdTimeCode &time=UsdTimeCode::EarliestTime());
 
+    /// \deprecated Please use UsdGeomSubset::ValidateFamily instead.
     /// Validates the data in the given set of GeomSubsets, \p subsets, given 
     /// the total number of elements in the array being subdivided,
     /// \p elementCount and the \p familyType that the subsets belong to.  

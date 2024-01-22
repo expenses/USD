@@ -34,6 +34,7 @@ pxr_library(usdUtils
 
     PRIVATE_CLASSES
         assetLocalization
+        assetLocalizationDelegate
 
     PUBLIC_HEADERS
         api.h
@@ -170,11 +171,10 @@ pxr_install_test_dir(
     DEST testUsdUtilsCreateNewUsdzPackageUdim
 )
 
-# Commented out until completion of USD-8473
-# pxr_install_test_dir(
-#    SRC testenv/testUsdUtilsCreateNewUsdzPackage
-#    DEST testUsdUtilsCreateNewUsdzPackageRemapClipsDir
-# )
+pxr_install_test_dir(
+   SRC testenv/testUsdUtilsCreateNewUsdzPackage
+   DEST testUsdUtilsCreateNewUsdzPackageRemapClipsDir
+)
 
 pxr_install_test_dir(
     SRC testenv/testUsdUtilsDependencies
@@ -538,7 +538,7 @@ pxr_register_test(testUsdUtilsIntrospection
 pxr_register_test(testUsdUtilsModifyAssetPaths
     PYTHON
     COMMAND "${CMAKE_INSTALL_PREFIX}/tests/testUsdUtilsModifyAssetPaths layer.usda modified.usda"
-    DIFF_COMPARE modified.usda duplicates.usda removal.usda
+    DIFF_COMPARE modified.usda duplicates.usda removal.usda ref_layer_mod.usda ref_unmodified.usda
     EXPECTED_RETURN_CODE 0
 )
 

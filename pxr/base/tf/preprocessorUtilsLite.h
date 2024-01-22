@@ -333,7 +333,7 @@
 // arguments. MSVC will complain about insufficient arguments otherwise.
 // The ~ will be discarded in any case.
 #define TF_PP_EAT_PARENS(...) \
-    _TF_PP_EAT_PARENS_IFF(_TF_PP_IS_PARENS(__VA_ARGS__ ~),\
+    _TF_PP_IFF(_TF_PP_IS_PARENS(__VA_ARGS__ ~),\
         _TF_PP_PARENS_EXPAND1,_TF_PP_PARENS_EXPAND)(__VA_ARGS__)
 
 /// Expand the arguments and make the result a string.
@@ -347,12 +347,11 @@
 #define _TF_PP_EAT_PARENS_STR2(x, ...) #__VA_ARGS__
 
 // Expands to the second argument if c is 1 and the third argument if c is
-// 0.  No other values of c are allowed.  We can't use BOOST_PP_IFF() because
-// it won't expand during stringizing under MSVC.
-#define _TF_PP_EAT_PARENS_IFF(c, t, f) \
-    TF_PP_CAT(_TF_PP_EAT_PARENS_IFF_, c)(t, f)
-#define _TF_PP_EAT_PARENS_IFF_0(t, f) f
-#define _TF_PP_EAT_PARENS_IFF_1(t, f) t
+// 0.  No other values of c are allowed.
+#define _TF_PP_IFF(c, t, f) \
+    TF_PP_CAT(_TF_PP_IFF_, c)(t, f)
+#define _TF_PP_IFF_0(t, f) f
+#define _TF_PP_IFF_1(t, f) t
 
 // Force expansion of the arguments.
 #define _TF_PP_PARENS_EXPAND(...) __VA_ARGS__
@@ -397,5 +396,9 @@
 /// \ingroup group_tf_Preprocessor
 /// \hideinitializer
 #define TF_PP_IS_TUPLE(arg) _TF_PP_IS_PARENS(arg)
+
+/// Expands to the 'index' element of a non-empty 'tuple'.
+#define TF_PP_TUPLE_ELEM(index, tuple) \
+    TF_PP_VARIADIC_ELEM(index, TF_PP_EAT_PARENS(tuple))
 
 #endif // PXR_BASE_TF_PREPROCESSOR_UTILS_LITE_H

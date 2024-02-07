@@ -51,7 +51,7 @@ static size_t
 Arch_ObtainCacheLineSize()
 {
 #if defined(ARCH_OS_LINUX)
-    return sysconf(_SC_LEVEL1_DCACHE_LINESIZE);
+    return 0;//sysconf(_SC_LEVEL1_DCACHE_LINESIZE);
 #elif defined(ARCH_OS_DARWIN)
     size_t cacheLineSize = 0;
     size_t cacheLineSizeSize = sizeof(cacheLineSize);

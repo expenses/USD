@@ -41,6 +41,9 @@
 #include <cerrno>
 #include <cstdio>
 
+#define DEFFILEMODE 0000666
+#define ACCESSPERMS 0000777
+
 #if defined(ARCH_OS_WINDOWS)
 #include <Windows.h>
 #include <io.h>

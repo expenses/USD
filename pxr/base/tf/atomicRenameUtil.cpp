@@ -40,6 +40,8 @@
 #include <string>
 #include <cerrno>
 
+#define DEFFILEMODE 0000666
+
 PXR_NAMESPACE_OPEN_SCOPE
 
 bool

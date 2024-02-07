@@ -40,6 +40,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
+#define DEFFILEMODE 0000666
+#define ACCESSPERMS 0000777
+
 using namespace std;
 PXR_NAMESPACE_USING_DIRECTIVE
 

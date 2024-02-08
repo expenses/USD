@@ -27,7 +27,7 @@
 #include "pxr/base/arch/errno.h"
 
 #if defined(ARCH_OS_WINDOWS)
-#include <Windows.h>
+#include <windows.h>
 #else
 #include <dlfcn.h>
 #endif

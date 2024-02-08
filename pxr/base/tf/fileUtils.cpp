@@ -51,7 +51,7 @@
 #include <dirent.h>
 #include <utime.h>
 #else
-#include <Windows.h>
+#include <windows.h>
 #include <Shellapi.h>
 #include <ShlwAPI.h>
 #include <sys/utime.h>

@@ -27,7 +27,7 @@
 #include <cerrno>
 #include <cstring>
 #if defined(ARCH_OS_WINDOWS)
-#include <Windows.h>
+#include <windows.h>
 #endif
 
 PXR_NAMESPACE_OPEN_SCOPE

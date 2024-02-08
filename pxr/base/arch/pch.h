@@ -65,7 +65,7 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
-#include <Windows.h>
+#include <windows.h>
 #include <DbgHelp.h>
 #include <Memoryapi.h>
 #include <Psapi.h>

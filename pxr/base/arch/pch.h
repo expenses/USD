@@ -67,7 +67,7 @@
 
 #include <windows.h>
 #include <dbghelp.h>
-#include <Memoryapi.h>
+#include <memoryapi.h>
 #include <psapi.h>
 #include <winioctl.h>
 #include <winsock2.h>

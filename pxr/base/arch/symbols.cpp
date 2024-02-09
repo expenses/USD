@@ -34,7 +34,7 @@
 #elif defined(ARCH_OS_WINDOWS)
 #include <windows.h>
 #include <dbghelp.h>
-#include <Psapi.h>
+#include <psapi.h>
 #endif
 
 PXR_NAMESPACE_OPEN_SCOPE

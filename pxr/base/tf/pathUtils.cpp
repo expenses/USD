@@ -42,7 +42,7 @@
 
 #if defined(ARCH_OS_WINDOWS)
 #include <windows.h>
-#include <Shlwapi.h>
+#include <shlwapi.h>
 #else
 #include <glob.h>
 #endif

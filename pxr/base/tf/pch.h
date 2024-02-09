@@ -57,7 +57,7 @@
 #endif
 
 #include <windows.h>
-#include <Shlwapi.h>
+#include <shlwapi.h>
 #include <intrin.h>
 #include <io.h>
 #include <boost/preprocessor/variadic/size.hpp>

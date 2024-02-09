@@ -33,7 +33,7 @@
 #include <dlfcn.h>
 #elif defined(ARCH_OS_WINDOWS)
 #include <windows.h>
-#include <DbgHelp.h>
+#include <dbghelp.h>
 #include <Psapi.h>
 #endif
 

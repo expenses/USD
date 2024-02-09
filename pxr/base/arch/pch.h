@@ -66,11 +66,11 @@
 #endif
 
 #include <windows.h>
-#include <DbgHelp.h>
+#include <dbghelp.h>
 #include <Memoryapi.h>
 #include <Psapi.h>
 #include <winioctl.h>
-#include <Winsock2.h>
+#include <winsock2.h>
 #include <chrono>
 #include <direct.h>
 #include <intrin.h>

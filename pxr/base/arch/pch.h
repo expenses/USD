@@ -69,7 +69,7 @@
 #include <DbgHelp.h>
 #include <Memoryapi.h>
 #include <Psapi.h>
-#include <WinIoCtl.h>
+#include <winioctl.h>
 #include <Winsock2.h>
 #include <chrono>
 #include <direct.h>

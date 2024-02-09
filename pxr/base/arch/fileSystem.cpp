@@ -49,7 +49,7 @@
 #include <io.h>
 #include <process.h>
 #include <windows.h>
-#include <WinIoCtl.h>
+#include <winioctl.h>
 #else
 #include <alloca.h>
 #include <sys/mman.h>

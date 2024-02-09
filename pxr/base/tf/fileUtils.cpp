@@ -52,8 +52,8 @@
 #include <utime.h>
 #else
 #include <windows.h>
-#include <Shellapi.h>
-#include <ShlwAPI.h>
+#include <shellapi.h>
+#include <shlwapi.h>
 #include <sys/utime.h>
 #endif
 using std::set;

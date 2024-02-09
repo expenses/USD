@@ -55,8 +55,8 @@ ArchStrerror(int errorCode)
     //   unknown). The string always includes a terminating null byte.
     //
     return strerror_r(errorCode, msg_buf, 256);
-#elif !defined(ARCH_COMPILER_MSVC)
-    strerror_r(errorCode, msg_buf, 256);
+//#elif !defined(ARCH_COMPILER_MSVC)
+//    strerror_r(errorCode, msg_buf, 256);
 #else
     strerror_s(msg_buf, 256, errorCode);
 #endif // _GNU_SOURCE

@@ -50,7 +50,6 @@
 #include <process.h>
 #include <windows.h>
 #include <winioctl.h>
-#include <share.h>
 #else
 #include <alloca.h>
 #include <sys/mman.h>

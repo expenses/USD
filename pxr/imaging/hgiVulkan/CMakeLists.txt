@@ -7,6 +7,8 @@ if (NOT ${PXR_BUILD_GPU_SUPPORT} OR NOT ${PXR_ENABLE_VULKAN_SUPPORT})
     return()
 endif()
 
+message(STATUS "linking      ${VULKAN_LIBS}")
+
 pxr_library(hgiVulkan
     LIBRARIES
         arch

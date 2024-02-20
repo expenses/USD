@@ -30,14 +30,8 @@ if(UNIX)
             "$ENV{OIIO_LOCATION}"
             "/opt/oiio"
     )
-    set(LIBNAME libOpenImageIO.so)
-    if(DEFINED PXR_USE_DEBUG_BUILD)
-        if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND ${PXR_USE_DEBUG_BUILD} MATCHES ON)
-            set(LIBNAME libOpenImageIO_d.dylib)
-        endif()
-    endif()
     find_path(OIIO_LIBRARY_DIR
-            ${LIBNAME}
+            libOpenImageIO.so
         HINTS
             "${OIIO_LOCATION}"
             "$ENV{OIIO_LOCATION}"
@@ -80,15 +74,10 @@ find_path(OIIO_INCLUDE_DIR
 )
 
 list(APPEND OIIO_INCLUDE_DIRS ${OIIO_INCLUDE_DIR})
-set(DEBUG_POSTFIX )
-if(DEFINED PXR_USE_DEBUG_BUILD)
-    if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND ${PXR_USE_DEBUG_BUILD} MATCHES ON)
-      set(DEBUG_POSTFIX _d)
-    endif()
-endif()
+
 foreach(OIIO_LIB
-    OpenImageIO${DEBUG_POSTFIX}
-    OpenImageIO_Util${DEBUG_POSTFIX}
+    OpenImageIO
+    OpenImageIO_Util
     )
 
     find_library(OIIO_${OIIO_LIB}_LIBRARY

@@ -152,16 +152,23 @@ endif()
 
 
 # --TBB
-find_package(TBB REQUIRED COMPONENTS tbb)
+option(OneTBB_CMAKE_ENABLE "Disable cmake build for oneTbb defaultly" OFF)
+if(WIN32)
+    find_package(TBB REQUIRED COMPONENTS tbb12)
+else()
+    find_package(TBB REQUIRED COMPONENTS tbb)
+endif()
+
 add_definitions(${TBB_DEFINITIONS})
+if(OneTBB_CMAKE_ENABLE)
+    add_definitions(-DPXR_ONETBB_SUPPORT_ENABLED)
+endif()
+message("OpenUSD find tbb libraries ${TBB_LIBRARIES}")
 
 # --math
 if(WIN32)
     # Math functions are linked automatically by including math.h on Windows.
     set(M_LIB "")
-elseif (APPLE)
-    # On Apple platforms, its idiomatic to just provide the -l linkage for sdk libs to be portable across SDK versions
-    set(M_LIB "-lm")
 else()
     find_library(M_LIB m)
 endif()
@@ -231,12 +238,7 @@ if (PXR_BUILD_IMAGING)
         if (POLICY CMP0072)
             cmake_policy(SET CMP0072 OLD)
         endif()
-        if (APPLE)
-            set(OPENGL_gl_LIBRARY "-framework OpenGL")
-        else ()
-            find_package(OpenGL REQUIRED)
-        endif()
-        add_definitions(-DPXR_GL_SUPPORT_ENABLED)
+        find_package(OpenGL REQUIRED)
     endif()
     # --Metal
     if (PXR_ENABLE_METAL_SUPPORT)
@@ -338,10 +340,6 @@ if(PXR_ENABLE_OSL_SUPPORT)
     find_package(OSL REQUIRED)
     set(REQUIRES_Imath TRUE)
     add_definitions(-DPXR_OSL_SUPPORT_ENABLED)
-endif()
-
-if (PXR_BUILD_ANIMX_TESTS)
-    find_package(AnimX REQUIRED)
 endif()
 
 # ----------------------------------------------

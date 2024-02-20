@@ -5,7 +5,7 @@ set(PXR_PACKAGE tf)
 set(PXR_PREFIX pxr/base)
 
 if(WIN32)
-    set(WINLIBS Shlwapi.lib)
+    set(WINLIBS shlwapi.lib)
 endif()
 
 # Add a test that WindowsImportWrapper adds entries on the PATH in the correct order, to ensure

@@ -34,7 +34,7 @@
 #include "pxr/base/tf/envSetting.h"
 
 #if defined(ARCH_OS_WINDOWS)
-#include <Windows.h>
+#include <windows.h>
 #include <io.h>
 #endif
 
